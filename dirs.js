@@ -1,6 +1,5 @@
-// var fs = require("fs");
-import * as fs from "fs";
-const {root, SKIP_MATCH} = require('./index')
+const fs = require('fs');
+const {ROOT, SKIP} = require('./const');
 
 // 递归遍历文件夹，对其下文件排序
 
@@ -11,7 +10,7 @@ const {root, SKIP_MATCH} = require('./index')
 function walkDir(root, skip, f, path='/'){
   let names = fs.readdirSync(root + path);
   let dirs = [], files = [];
-  for (let i in names){let n = names[i];
+  for (let n of names){
     let p = root + path + n;    //目录下的文件(夹)路径
     let stats = fs.lstatSync(p);
     if (skip(stats, n)) continue;
@@ -29,15 +28,12 @@ function walkDir(root, skip, f, path='/'){
 
 var dirs = {};
 
-walkDir(root,
-  (stats, n)=>SKIP_MATCH.exec(n),
+walkDir(ROOT,
+  (stats, n)=>SKIP.exec(n),
   (_, link, _0, files)=>{
     // 生成对象，键是所有目录，值是目录下的文件名(排序好)
     // 保存到dirs
     dirs[link] = files.sort();
   },
 )
-
-
-export {dirs, walkDir};
-
+module.exports = {dirs}

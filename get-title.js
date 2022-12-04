@@ -1,18 +1,12 @@
-import * as fs from "fs";
-const {root} = require('./index')
+const fs = require('fs')
+const {ROOT} = require('./const');
+
 
 function mdTitle(md){
   let lines = md.split(/\r\n|\n/);
-  let inMeta=lines[0].startsWith('---');
-  for (let i in lines){
-    let line = lines[i]
-    if (parseInt(i)>0&&line.startsWith('---'))inMeta = false;
-    if (inMeta || !line.trim()){ //如果在元数据内或者是空行
-      continue;
-    } else if (line.startsWith('# ')){
+  for (let line of lines){
+    if (line.startsWith('# ')){
       return line.slice(2).trim();
-    } else {
-      break;
     }
   }
 }
@@ -22,12 +16,18 @@ function stripExt(p){
 function fileName(p){
   return p.split('/').slice(-1)[0];
 }
+
 function getTitle(fileLink){
   // 读取文件对应的title(不管是不是md)，找不到则使用处理过的文件名
-  let md = fs.readFileSync(root+fileLink,'utf-8');
+  let md = fs.readFileSync(ROOT+fileLink,'utf-8');
   let title = mdTitle(md);
   if (title) return title;
   return stripExt(fileName(fileLink));
 }
 
-export {stripExt, getTitle};
+function getTarDir(dirLink, file){
+  //根据格式获取目标目录名
+  return dirLink + stripExt(file).trim()+'/';
+}
+
+module.exports = {stripExt, getTitle, getTarDir}

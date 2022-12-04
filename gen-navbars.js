@@ -1,14 +1,17 @@
-import {dirs} from './dirs'
-import {getTitle} from './get-title'
+const {INDEX} = require('./const');
+const {dirs} = require('./dirs');
+const {getTitle, stripExt} = require('./get-title');
 
-let navbar = []
+let navbar = [];
 
-for (let file of dirs['/docs/']){
-    let fileLink = '/docs/'+file
+for (let file of dirs['/']){
+    let fileLink = '/'+file;
+    if (stripExt(file)==INDEX
+        || !file.endsWith('.md')) continue;
     navbar.push({
         text:getTitle(fileLink),
-        link:fileLink
-    })
+        link:fileLink,
+    });
 }
 
-export {navbar}
+module.exports = {navbar}
