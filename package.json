@@ -1,0 +1,23 @@
+{
+  "name": "vuepress-auto-bar",
+  "version": "1.0.0",
+  "description": "自动生成侧边栏和导航栏",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sch246/vuepress-auto-bar.git"
+  },
+  "keywords": [
+    "vuepress",
+    "auto"
+  ],
+  "author": "sch246 <980001119@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sch246/vuepress-auto-bar/issues"
+  },
+  "homepage": "https://github.com/sch246/vuepress-auto-bar#readme"
+}
