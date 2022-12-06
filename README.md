@@ -20,22 +20,41 @@ yarn add vuepress-auto-bar
 
 ```ts
 //...
-import autoBar from 'vuepress-auto-bar';
+import {AutoBar} from "vuepress-auto-bar";
+let bar = new AutoBar()
 //...
 export default defineUserConfig({
   //...
   theme: defaultTheme({
     //...
-    navbar: autoBar.navbar,
-    sidebar: autoBar.sidebar,
+    navbar: bar.getNavbar(),
+    sidebar: bar.getSidebar(),
     //...
   }),
 });
 ```
 
-随后它会检测`docs`下的目录并且生成对应的导航栏和侧边栏
+这已经可以使用了
 
-没有任何设置，但是需要你保持一定的目录结构
+在启动 Vuepress 时，它会检测`docs`下的目录并且生成对应的导航栏和侧边栏
+
+如有需要，可以指定一些基本值，以下是默认值
+
+```ts
+//...
+import AutoBar from 'vuepress-auto-bar';
+let bar = new AutoBar({
+  root:'docs',//根目录
+  skip:/^[._]/,//跳过以_或者.开头的文件和文件夹
+  index:'index',//将不会把根目录下的index.md添加到导航栏和侧边栏
+})
+//...
+export default defineUserConfig({
+  //...
+});
+```
+
+没有任何其它设置，但是需要你保持一定的目录结构
 
 基本规则:
 
@@ -54,9 +73,13 @@ export default defineUserConfig({
 - `.`或`_`开头以隐藏文件或目录
 - 侧边栏只显示本目录和子目录的文件
   - 除非它是折叠的，那么展开后可以显示更多级
-  - 侧边栏首项始终是上一级的目录同名文件
-    - 点击将返回上一级——除非是根目录
+  - 若上级有目录同名文件，会显示在侧边栏首项用于返回上一级
+    - 若上级没有目录同名文件则不会显示
+    - 根目录的文件会复制同名目录的侧边栏，所以看上去不会跳转
 - 补充：`index.md`不例外，它会定位到同级的`index`目录
+- 对于根目录
+  - 默认不会生成侧边栏
+  - 除`docs/index.md`外，若存在同名目录，则会添加到导航栏并复制侧边栏
 
 ```
 └─ docs
@@ -96,13 +119,17 @@ name12
     name121
 ```
 
-每一项都是可以点击的，若点击 name111
+每一项都是可以点击的，若点击 name11，会打开 name11，侧边栏并不会切换
+
+若点击 name111，会打开 name111 并切换到对应的侧边栏
 
 ```
 ../name11
 name111
     name1111
 ```
+
+再点击 ../name11 会打开 name11 并返回到原来的侧边栏
 
 同理，如果点击导航栏中的 name2
 
@@ -113,13 +140,3 @@ name22
     name211
 name23
 ```
-
-如果把主页设置成`/`且对应于`docs/index.md`
-
-主页的侧边栏会是这样的
-
-```
-index
-www
-```
-
