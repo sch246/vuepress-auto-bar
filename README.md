@@ -140,3 +140,49 @@ name22
     name211
 name23
 ```
+
+## 使用例
+
+### 设置根目录是`/`而非`/docs/`
+
+```ts
+//...
+import AutoBar from 'vuepress-auto-bar';
+let bar = new AutoBar({
+  root:'.',
+  skip:/^([._])|(node_modules)/,//跳过node_modules
+  index:'README',//主页为README.md
+})
+//...
+export default defineUserConfig({
+  //...
+});
+```
+
+### 反转blog的侧边栏
+
+假设`/docs/blogs/`目录用于存放博客
+
+且`/docs/blogs.md`作为导航栏的项指向了它
+
+由于用了日期命名所以希望倒序
+
+```ts
+//...
+import {AutoBar} from "vuepress-auto-bar";
+let bar = new AutoBar()
+
+let sidebars = bar.getSidebar()
+let blogs = sidebars['/blogs/']
+blogs.unshift(blogs.reverse().pop()??'')
+//...
+export default defineUserConfig({
+  //...
+  theme: defaultTheme({
+    //...
+    navbar: bar.getNavbar(),
+    sidebar: sidebars,
+    //...
+  }),
+});
+```
